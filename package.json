@@ -1,0 +1,26 @@
+{
+  "name": "http-api-assignment-ii",
+  "version": "1.0.0",
+  "description": "a -better- api",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests completed\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AGB777/http-api-assignment-ii.git"
+  },
+  "author": "alex gill-boucher",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/AGB777/http-api-assignment-ii/issues"
+  },
+  "homepage": "https://github.com/AGB777/http-api-assignment-ii#readme",
+  "dependencies": {
+    "eslint": "^8.8.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.25.4"
+  }
+}
