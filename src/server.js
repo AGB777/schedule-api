@@ -10,6 +10,8 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 const gettableURLs = {
   '/': htmlHandler.getIndex,
   '/style.css': htmlHandler.getStyle,
+  '/normalize.css': htmlHandler.getNorm,
+  '/skeleton.css': htmlHandler.getSkel,
   '/getUsers': jsonHandler.getUsers,
   '/notFound': jsonHandler.notFound,
 };
@@ -46,10 +48,10 @@ const handlePost = (request, response, parsedURL) => {
 
 const onRequest = (request, response) => {
   const parsedURL = url.parse(request.url);
-    
+
   console.log(parsedURL.pathname);
-    console.log(request.method);
-    
+  console.log(request.method);
+
   switch (request.method) {
     case 'GET': // I should be able to use the same methods for get and head requests, excluding the body of the response if its a head
     case 'HEAD': // so I'll have get fall through to head to execute the same code

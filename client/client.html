@@ -2,30 +2,131 @@
 <html lang="en">
 <head>
   <title>Our simple HTTP server</title>
+  <link rel="stylesheet" type="text/css" href="/normalize.css">
+  <link rel="stylesheet" type="text/css" href="/skeleton.css">
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
       
       const handleResponse = (response) => {
           
-      };
+          response.text().then((resText) => {
+              console.log(resText);
+              
+              const content = document.querySelector('#content');
+              
+              const newElements = content.childElementCount === 0;
+              
+              const status = content.querySelector('#status') || document.createElement('h1');
+              status.id='status';
+              status.textContent=response.status;
+              
+              const body = content.querySelector('#body') || document.createElement('p');
+              body.id='body';
+              
+              if(resText){
+                body.textContent=resText;
+              }
+              else{
+                body.textContent='no content associated with this response';
+              }
+              
+              if(newElements){
+                  content.appendChild(status);
+                  content.appendChild(body);
+              }
+              
+              /*
+              const newElements = content.childElementCount === 0;
+              
+              const contentType = response.headers.get('ContentType');
+              
+              const status = content.querySelector('#status') || document.createElement('h1');
+              status.id='status';
+              status.textContent=response.status;
+              
+              const message = content.querySelector('#message') || document.createElement('p');
+              message.id='message';
+              
+              const id = content.querySelector('#id') || document.createElement('h5');
+              id.id='id';
+              
+              let parsedjson = JSON.parse(resText);
+              if(parsedjson.message){
+                message.textContent=parsedjson.message;
+              }
+              if(parsedjson.id){
+                id.textContent=parsedjson.id;
+              }
+              
+              if(newElements){
+                  content.appendChild(status);
+                  content.appendChild(message);
+                  content.appendChild(id);
+              }
+              */
+              
+              
+          });
+      }
       
-      const handlePost = (getForm) => {
+      const getUsers = async (getForm) => {
+          const action = getForm.querySelector('#urlField').value;
+          const method = getForm.querySelector('#methodSelect').value;
           
+          let response = await fetch(action, {
+              method: method,
+              headers: {
+                  'Accept': 'application/json'
+              }
+          });
+          
+          handleResponse(response);
       }
       
-      const getHead = (userForm) => {
-          const action = userform.querySelector('#urlField').value;
-          const method = userform.querySelector('#methodSelect').value;
-      }
+      const sendUser = async (userForm) => {
+          const action = userForm.getAttribute('action');
+          const method = userForm.getAttribute('method');
+          const name = userForm.querySelector('#nameField').value;
+          const age = userForm.querySelector('#ageField').value;
+          
+          const userData = `name=${name}&age=${age}`;
+          
+          let response = await fetch(action, {
+              method: method,
+              headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                  'Accept': 'application/json'
+              },
+              body: userData
+          });
+          
+          handleResponse(response);
+      };
       
       const init = () => {
           const userForm = document.querySelector("#userForm");
           const getForm = document.querySelector("#getForm");
           
+          const addUser = (e) => {
+              e.preventDefault();
+              sendUser(userForm);
+              return false;
+          }
           
+          userForm.addEventListener('submit', addUser);
           
-      }
+          const requestUsers = (e) => {
+              e.preventDefault();
+              getUsers(getForm);
+              return false;
+          }
+          
+          getForm.addEventListener('submit', requestUsers);
+          
+      };
+      
+      window.onload = init;
   </script>
 </head>
 <body>

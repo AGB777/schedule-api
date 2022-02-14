@@ -36,6 +36,7 @@ const addUser = (request, response, body) => {
     };
 
     respondJSON(request, response, 400, errorObj);
+      return;
   }
 
   const resObj = { message: 'user info updated' };
