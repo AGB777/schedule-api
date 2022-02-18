@@ -7,7 +7,7 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
-      
+      /*
       const handleResponse = (response) => {
           
           response.text().then((resText) => {
@@ -36,35 +36,35 @@
                   content.appendChild(body);
               }
               
-              /*
-              const newElements = content.childElementCount === 0;
-              
-              const contentType = response.headers.get('ContentType');
-              
-              const status = content.querySelector('#status') || document.createElement('h1');
-              status.id='status';
-              status.textContent=response.status;
-              
-              const message = content.querySelector('#message') || document.createElement('p');
-              message.id='message';
-              
-              const id = content.querySelector('#id') || document.createElement('h5');
-              id.id='id';
-              
-              let parsedjson = JSON.parse(resText);
-              if(parsedjson.message){
-                message.textContent=parsedjson.message;
-              }
-              if(parsedjson.id){
-                id.textContent=parsedjson.id;
-              }
-              
-              if(newElements){
-                  content.appendChild(status);
-                  content.appendChild(message);
-                  content.appendChild(id);
-              }
-              */
+              //
+              //const newElements = content.childElementCount === 0;
+              //
+              //const contentType = response.headers.get('ContentType');
+              //
+              //const status = content.querySelector('#status') || document.createElement('h1');
+              //status.id='status';
+              //status.textContent=response.status;
+              //
+              //const message = content.querySelector('#message') || document.createElement('p');
+              //message.id='message';
+              //
+              //const id = content.querySelector('#id') || document.createElement('h5');
+              //id.id='id';
+              //
+              //let parsedjson = JSON.parse(resText);
+              //if(parsedjson.message){
+              //  message.textContent=parsedjson.message;
+              //}
+              //if(parsedjson.id){
+              //  id.textContent=parsedjson.id;
+              //}
+              //
+              //if(newElements){
+              //    content.appendChild(status);
+              //    content.appendChild(message);
+              //    content.appendChild(id);
+              //}
+              //
               
               
           });
@@ -103,11 +103,11 @@
           
           handleResponse(response);
       };
-      
+      */
       const init = () => {
-          const userForm = document.querySelector("#userForm");
-          const getForm = document.querySelector("#getForm");
-          
+          const schedForm = document.querySelector("#scheduleForm");
+          const content = document.querySelector("#content");
+          /*
           const addUser = (e) => {
               e.preventDefault();
               sendUser(userForm);
@@ -123,6 +123,19 @@
           }
           
           getForm.addEventListener('submit', requestUsers);
+          */
+          let newElement;
+          for(let i=1; i<=7; i++){
+              for(let n=1; n<=5; n++){
+                  newElement = document.createElement('input');
+                  newElement.type='text';
+                  newElement.id=`day${i}hour${n}`;
+                  newElement.setAttribute('grid-column',i);
+                  newElement.setAttribute('grid-row',n);
+                  newElement.height='100px';
+                  content.appendChild(newElement);
+              };
+          };
           
       };
       
@@ -132,26 +145,14 @@
 <body>
   <section id="top">
     <h3>POST Status Code Tests</h3>
-    <form id="userForm" action="/addUser" method="post">
-      <label for="name">Name: </label>
-      <input id="nameField" type="text" name="name" />
-      <label for="age">Age: </label>
-      <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
-      <input type="submit" value="Add User" />
-    </form>
-    <form id="getForm" action="/getUsers" method="HEAD">
-      <select id='urlField'>
-        <option value='/getUsers'>/getUsers</option>
-        <option value='/notReal'>/notReal</option>
-      </select>
-      <select id="methodSelect">
-        <option value="get">GET</option>
-        <option value="head">HEAD</option>
-      </select>
-      <input type="submit" value="Get User" />
+    <form id="scheduleForm" action="/addUser" method="post">
+      <label for="schedName">Name this Schedule </label>
+      <input id="schedName" type="text" name="schedName" />
+      <input type="submit" value="load" />
+      <input type="submit" value="save" />
     </form>
   </section>
-  <section id="content">
+  <section id="content" display='grid'>
   </section>
 </body>
 </html>
