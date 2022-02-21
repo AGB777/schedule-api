@@ -13,7 +13,7 @@ const gettableURLs = {
   '/normalize.css': htmlHandler.getNorm,
   '/skeleton.css': htmlHandler.getSkel,
   '/bootstrap.css': htmlHandler.getBoot,
-  '/getUsers': jsonHandler.getUsers,
+  '/getSchedule': jsonHandler.getSchedule,
   '/notFound': jsonHandler.notFound,
 };
 
@@ -45,9 +45,7 @@ const handlePost = (request, response, parsedURL) => {
   request.on('end', () => {
     console.log('posted');
     const bodyString = Buffer.concat(body).toString();
-    const bodyParams = query.parse(parsedURL.search);
-    console.log(bodyString);
-    console.log(bodyParams);
+    const bodyParams = query.parse(parsedURL.query);
     postableURLs[parsedURL.pathname](request, response, bodyString, bodyParams.name);
   });
 };

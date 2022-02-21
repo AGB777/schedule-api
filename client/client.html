@@ -9,7 +9,7 @@
       
       const handleResponse = (response) => {
           console.log(response.status);
-          response.text.then((resText) => {
+          response.text().then((resText) => {
               console.log(resText);
           })
       }
