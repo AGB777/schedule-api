@@ -2,80 +2,24 @@
 <html lang="en">
 <head>
   <title>Our simple HTTP server</title>
-  <link rel="stylesheet" type="text/css" href="/normalize.css">
-  <link rel="stylesheet" type="text/css" href="/skeleton.css">
   <link rel="stylesheet" type="text/css" href="/style.css">
+  <link rel="stylesheet" type="text/css" href="/bootstrap.css">
   
   <script>
-      /*
+      
       const handleResponse = (response) => {
-          
-          response.text().then((resText) => {
+          console.log(response.status);
+          response.text.then((resText) => {
               console.log(resText);
-              
-              const content = document.querySelector('#content');
-              
-              const newElements = content.childElementCount === 0;
-              
-              const status = content.querySelector('#status') || document.createElement('h1');
-              status.id='status';
-              status.textContent=response.status;
-              
-              const body = content.querySelector('#body') || document.createElement('p');
-              body.id='body';
-              
-              if(resText){
-                body.textContent=resText;
-              }
-              else{
-                body.textContent='no content associated with this response';
-              }
-              
-              if(newElements){
-                  content.appendChild(status);
-                  content.appendChild(body);
-              }
-              
-              //
-              //const newElements = content.childElementCount === 0;
-              //
-              //const contentType = response.headers.get('ContentType');
-              //
-              //const status = content.querySelector('#status') || document.createElement('h1');
-              //status.id='status';
-              //status.textContent=response.status;
-              //
-              //const message = content.querySelector('#message') || document.createElement('p');
-              //message.id='message';
-              //
-              //const id = content.querySelector('#id') || document.createElement('h5');
-              //id.id='id';
-              //
-              //let parsedjson = JSON.parse(resText);
-              //if(parsedjson.message){
-              //  message.textContent=parsedjson.message;
-              //}
-              //if(parsedjson.id){
-              //  id.textContent=parsedjson.id;
-              //}
-              //
-              //if(newElements){
-              //    content.appendChild(status);
-              //    content.appendChild(message);
-              //    content.appendChild(id);
-              //}
-              //
-              
-              
-          });
+          })
       }
       
-      const getUsers = async (getForm) => {
-          const action = getForm.querySelector('#urlField').value;
-          const method = getForm.querySelector('#methodSelect').value;
+      const downloadSchedule = async (content) => {
+          const name = document.querySelector('#schedName').value;
+          const targetURL = `/getSchedule?name=${name}`;
           
-          let response = await fetch(action, {
-              method: method,
+          let response = await fetch(targetURL, {
+              method: 'GET',
               headers: {
                   'Accept': 'application/json'
               }
@@ -84,54 +28,63 @@
           handleResponse(response);
       }
       
-      const sendUser = async (userForm) => {
-          const action = userForm.getAttribute('action');
-          const method = userForm.getAttribute('method');
-          const name = userForm.querySelector('#nameField').value;
-          const age = userForm.querySelector('#ageField').value;
+      const uploadSchedule = async (content) => {
+          let scheduleObj = {};
+          let thisElement;
+          for(let i=0; i<7; i++){
+              for(let n=1; n<=7; n++){
+                  thisElement = document.querySelector(`#day${i}hour${n}`);
+                  scheduleObj[`day${i}hour${n}`] = thisElement.value;
+              };
+          };
+          //is it really that easy?
           
-          const userData = `name=${name}&age=${age}`;
+          const scheduleString = JSON.stringify(scheduleObj);
           
-          let response = await fetch(action, {
-              method: method,
+          const name = document.querySelector('#schedName').value;
+          const targetURL = `/postSchedule?name=${name}`;
+          
+          let response = await fetch(targetURL, {
+              method: 'POST',
               headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded',
+                  'Content-Type': 'application/json',
                   'Accept': 'application/json'
               },
-              body: userData
+              body: scheduleString
           });
           
+          
           handleResponse(response);
-      };
-      */
+      }
+      
+      const sevenDays = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+      
       const init = () => {
-          const schedForm = document.querySelector("#scheduleForm");
           const content = document.querySelector("#content");
-          /*
-          const addUser = (e) => {
-              e.preventDefault();
-              sendUser(userForm);
+          const loadButton = document.querySelector("#loadButton");
+          const saveButton = document.querySelector("#saveButton");
+          
+          const getSchedule = (e) => {
+              downloadSchedule(content);
               return false;
           }
           
-          userForm.addEventListener('submit', addUser);
-          
-          const requestUsers = (e) => {
-              e.preventDefault();
-              getUsers(getForm);
+          const postSchedule = (e) => {
+              uploadSchedule(content);
               return false;
           }
           
-          getForm.addEventListener('submit', requestUsers);
-          */
+          loadButton.addEventListener('click', getSchedule);
+          saveButton.addEventListener('click', postSchedule);
+          
           let newElement;
-          for(let i=1; i<=7; i++){
-              for(let n=1; n<=5; n++){
-                  newElement = document.createElement('input');
-                  newElement.type='text';
+          for(let i=0; i<7; i++){
+              for(let n=1; n<=7; n++){
+                  newElement = document.createElement('textarea');
+                  newElement.classList.add('schedule-item');
+                  newElement.classList.add(sevenDays[i]);
+                  newElement.classList.add(`hour${n}`);
                   newElement.id=`day${i}hour${n}`;
-                  newElement.setAttribute('grid-column',i);
-                  newElement.setAttribute('grid-row',n);
                   newElement.height='100px';
                   content.appendChild(newElement);
               };
@@ -143,16 +96,30 @@
   </script>
 </head>
 <body>
-  <section id="top">
-    <h3>POST Status Code Tests</h3>
-    <form id="scheduleForm" action="/addUser" method="post">
-      <label for="schedName">Name this Schedule </label>
-      <input id="schedName" type="text" name="schedName" />
-      <input type="submit" value="load" />
-      <input type="submit" value="save" />
-    </form>
+  <section id="controls">
+    <h3>lets make a schedule</h3>
+    <label for="schedName">enter an identifier for this schedule </label>
+    <input id="schedName" type="text" name="schedName" />
+    <input type="button" id="loadButton" value="load"/>
+    <input type="button" id="saveButton" value="save"/>
   </section>
   <section id="content" display='grid'>
+      <div class="day-label sunday">sunday</div>
+      <div class="day-label monday">monday</div>
+      <div class="day-label tuesday">tuesday</div>
+      <div class="day-label wednesday">wednesday</div>
+      <div class="day-label thursday">thursday</div>
+      <div class="day-label friday">friday</div>
+      <div class="day-label saturday">saturday</div>
+      
+      
+      <div class="time-label hour1">08:00</div>
+      <div class="time-label hour2">09:00</div>
+      <div class="time-label hour3">10:00</div>
+      <div class="time-label hour4">11:00</div>
+      <div class="time-label hour5">12:00</div>
+      <div class="time-label hour6">01:00</div>
+      <div class="time-label hour7">02:00</div>
   </section>
 </body>
 </html>

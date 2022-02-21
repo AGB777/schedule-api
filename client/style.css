@@ -16,9 +16,40 @@ html, body {
 
 #content {
     display: grid;
-    grid-template-columns: 12% 12% 12% 12% 12% 12% 12%;
-    grid-template-rows:  12% 12% 12% 12% 12%;
-  margin-top: 100px;
-  font-size: 2em;
+    grid-template-columns: 8% 12% 12% 12% 12% 12% 12% 12% 8%;
+    grid-template-rows:  12% 12% 12% 12% 12% 12% 12%;
+  margin-top: 20px;
+  font-size: 0.7em;
   text-align: center;
 }
+
+.schedule-item {
+    margin:0;
+    border-radius: 0px;
+    resize:none;
+}
+
+
+.time-label {
+    grid-column:1;
+    font-size: 1.2em;
+}
+.sunday {grid-column: 2;}
+.monday {grid-column: 3;}
+.tuesday {grid-column: 4;}
+.wednesday {grid-column: 5;}
+.thursday {grid-column: 6;}
+.friday {grid-column: 7;}
+.saturday {grid-column: 8;}
+
+.day-label {
+    grid-row:1;
+    font-size: 1.2em;
+}
+.hour1 {grid-row: 2;}
+.hour2 {grid-row: 3;}
+.hour3 {grid-row: 4;}
+.hour4 {grid-row: 5;}
+.hour5 {grid-row: 6;}
+.hour6 {grid-row: 7;}
+.hour7 {grid-row: 8;}

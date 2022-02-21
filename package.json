@@ -18,8 +18,8 @@
     "url": "https://github.com/AGB777/schedule-api/issues"
   },
   "homepage": "https://github.com/AGB777/schedule-api#readme",
-  "dependencies": {
-    "eslint": "^8.8.0",
+  "devDependencies": {
+    "eslint": "^8.9.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.25.4"
   }

@@ -1,4 +1,4 @@
-const users = {};
+const schedules = {};
 
 const respondJSON = (request, response, status, obj) => {
   const jsonString = JSON.stringify(obj);
@@ -12,13 +12,6 @@ const respondJSON = (request, response, status, obj) => {
   response.end();
 };
 
-const getUsers = (request, response) => {
-  // here i think i ought to pass in {users} and not users
-  // i believe prof specifically addressed this in a demo, but i cant remember the reason
-  // ill have to test and see whats different once the server is working
-  respondJSON(request, response, 200, users);
-};
-
 const notFound = (request, response) => {
   const errorObj = {
     message: 'the page you were looking for couldnt be found',
@@ -28,35 +21,31 @@ const notFound = (request, response) => {
   respondJSON(request, response, 404, errorObj);
 };
 
-const addUser = (request, response, body) => {
-  if (!body.name || !body.age) {
+const postSchedule = (request, response, body, name) => {
+  if (name) {
     const errorObj = {
-      message: 'a user must have both a name and an age',
+      message: 'this schedule needs a name',
       id: 'missingParams',
     };
 
     respondJSON(request, response, 400, errorObj);
-      return;
+    return;
   }
 
-  const resObj = { message: 'user info updated' };
+  const resObj = { message: 'schedule updated' };
   let status = 204;
 
-  if (!users[body.name]) {
-    users[body.name] = {};
-
-    resObj.message = 'new user created';
+  if (!schedules[name]) {
+    resObj.message = 'new schedule created';
     status = 201;
   }
 
-  users[body.name].name = body.name;
-  users[body.name].age = body.age;
+  schedules[name] = body;
 
   respondJSON(request, response, status, resObj);
 };
 
 module.exports = {
-  getUsers,
-  notFound,
-  addUser,
+  postSchedule,
+  notFound
 };

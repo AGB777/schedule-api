@@ -12,16 +12,19 @@ const gettableURLs = {
   '/style.css': htmlHandler.getStyle,
   '/normalize.css': htmlHandler.getNorm,
   '/skeleton.css': htmlHandler.getSkel,
+  '/bootstrap.css': htmlHandler.getBoot,
   '/getUsers': jsonHandler.getUsers,
   '/notFound': jsonHandler.notFound,
 };
 
 const postableURLs = {
-  '/addUser': jsonHandler.addUser,
+  '/postSchedule': jsonHandler.postSchedule,
 };
 
 const handlePost = (request, response, parsedURL) => {
+  console.log('posting');
   if (!postableURLs[parsedURL.pathname]) {
+    console.log('failing');
     jsonHandler.notFound(request, response);
     return;
   }
@@ -36,13 +39,16 @@ const handlePost = (request, response, parsedURL) => {
 
   request.on('data', (chunk) => {
     body.push(chunk);
+    console.log('chunking');
   });
 
   request.on('end', () => {
+    console.log('posted');
     const bodyString = Buffer.concat(body).toString();
-    const bodyParams = query.parse(bodyString);
-
-    postableURLs[parsedURL.pathname](request, response, bodyParams);
+    const bodyParams = query.parse(parsedURL.search);
+    console.log(bodyString);
+    console.log(bodyParams);
+    postableURLs[parsedURL.pathname](request, response, bodyString, bodyParams.name);
   });
 };
 
@@ -50,11 +56,11 @@ const onRequest = (request, response) => {
   const parsedURL = url.parse(request.url);
 
   console.log(parsedURL.pathname);
-  console.log(request.method);
+  // console.log(request.method);
 
   switch (request.method) {
-    case 'GET': // I should be able to use the same methods for get and head requests, excluding the body of the response if its a head
-    case 'HEAD': // so I'll have get fall through to head to execute the same code
+    case 'GET':
+    case 'HEAD':
       if (gettableURLs[parsedURL.pathname]) {
         gettableURLs[parsedURL.pathname](request, response);
         break;
