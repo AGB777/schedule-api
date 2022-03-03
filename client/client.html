@@ -7,10 +7,38 @@
   
   <script>
       
-      const handleResponse = (response) => {
+      const stringifyMySchedule = () => {
+          let scheduleObj = {};
+          let thisElement;
+          for(let i=0; i<7; i++){
+              for(let n=1; n<=7; n++){
+                  thisElement = document.querySelector(`#d${i}h${n}`);
+                  scheduleObj[`d${i}h${n}`] = thisElement.value;
+              };
+          };
+          
+          const text = JSON.stringify(scheduleObj);
+          const trimmedText = text.replace('{','').replace('}','').replaceAll('"','');
+          return trimmedText;
+          
+      }
+      
+      const schedulifyMyString = (MyString) => {
+            const entries = MyString.split(',');
+            entries.forEach(entry => {
+                const splitEntry = entry.split(':');
+                document.querySelector(`#${splitEntry[0]}`).value = splitEntry[1];
+            });
+      }
+      
+      const handleResponse = (response, parseSchedule) => {
           console.log(response.status);
           response.text().then((resText) => {
               console.log(resText);
+              
+              if(parseSchedule){
+                  schedulifyMyString(trimmedText);
+              }
           })
       }
       
@@ -25,21 +53,12 @@
               }
           });
           
-          handleResponse(response);
+          handleResponse(response, true);
       }
       
       const uploadSchedule = async (content) => {
-          let scheduleObj = {};
-          let thisElement;
-          for(let i=0; i<7; i++){
-              for(let n=1; n<=7; n++){
-                  thisElement = document.querySelector(`#day${i}hour${n}`);
-                  scheduleObj[`day${i}hour${n}`] = thisElement.value;
-              };
-          };
-          //is it really that easy?
           
-          const scheduleString = JSON.stringify(scheduleObj);
+          const scheduleString = stringifyMySchedule();
           
           const name = document.querySelector('#schedName').value;
           const targetURL = `/postSchedule?name=${name}`;
@@ -54,7 +73,15 @@
           });
           
           
-          handleResponse(response);
+          handleResponse(response, false);
+      }
+      
+      const stringToUser = () => {
+          document.querySelector('#stringBox').value = stringifyMySchedule();
+      }
+      
+      const stringFromUser = () => {
+          schedulifyMyString(document.querySelector('#stringBox').value);
       }
       
       const sevenDays = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
@@ -63,6 +90,8 @@
           const content = document.querySelector("#content");
           const loadButton = document.querySelector("#loadButton");
           const saveButton = document.querySelector("#saveButton");
+          const parseButton = document.querySelector("#parseButton");
+          const stringifyButton = document.querySelector("#stringifyButton");
           
           const getSchedule = (e) => {
               downloadSchedule(content);
@@ -77,6 +106,9 @@
           loadButton.addEventListener('click', getSchedule);
           saveButton.addEventListener('click', postSchedule);
           
+          parseButton.addEventListener('click', stringFromUser);
+          stringifyButton.addEventListener('click', stringToUser);
+          
           let newElement;
           for(let i=0; i<7; i++){
               for(let n=1; n<=7; n++){
@@ -84,7 +116,7 @@
                   newElement.classList.add('schedule-item');
                   newElement.classList.add(sevenDays[i]);
                   newElement.classList.add(`hour${n}`);
-                  newElement.id=`day${i}hour${n}`;
+                  newElement.id=`d${i}h${n}`;
                   newElement.height='100px';
                   content.appendChild(newElement);
               };
@@ -97,13 +129,13 @@
 </head>
 <body>
   <section id="controls">
-    <h3>lets make a schedule</h3>
-    <label for="schedName">enter an identifier for this schedule </label>
+    <h3 id="title">lets make a schedule</h3>
+    <label for="schedName" id=schedLabel>enter an identifier for this schedule </label>
     <input id="schedName" type="text" name="schedName" />
     <input type="button" id="loadButton" value="load"/>
     <input type="button" id="saveButton" value="save"/>
   </section>
-  <section id="content" display='grid'>
+  <section id="content">
       <div class="day-label sunday">sunday</div>
       <div class="day-label monday">monday</div>
       <div class="day-label tuesday">tuesday</div>
@@ -121,5 +153,15 @@
       <div class="time-label hour6">01:00</div>
       <div class="time-label hour7">02:00</div>
   </section>
+    <section id="textIO">
+        <div id="expl">here you have the option to translate the schedule to a string which you can save, as the server cannot yet store data long term</div>
+        
+        <textarea id="stringBox"></textarea>
+        
+        <label id="parseLabel">press this button to parse this string and fill the schedule with data</label>
+        <input type="button" id="parseButton" value="this"/>
+        <label id="stringifyLabel">press that button to read the data in the schedule and generate a string from it</label>
+        <input type="button" id="stringifyButton" value="that"/>
+    </section>
 </body>
 </html>

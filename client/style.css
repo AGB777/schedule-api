@@ -5,14 +5,12 @@ html, body {
   padding: 0;
 }
 
-#top {
+
+#controls {
   text-align: center;
-  margin: 0 auto;
+    border-bottom: 5px solid burlywood;
 }
 
-#top h1 {
-  font-size: 2em;
-}
 
 #content {
     display: grid;
@@ -23,16 +21,81 @@ html, body {
   text-align: center;
 }
 
+#textIO {
+    display: grid;
+    grid-template-columns: 8% 42% 42% 8%;
+    grid-template-rows:  20% 20% 20% 20% 20%;
+}
+
+#expl {
+    grid-row: 1;
+    grid-column: 2/4;
+    border-left: 5px solid burlywood;
+    border-right: 5px solid burlywood;
+    padding: 5px;
+}
+
+#stringBox {
+    grid-row: 2/6;
+    grid-column: 2;
+    border: 5px solid burlywood;
+}
+
+#parseLabel {
+    grid-row: 2;
+    grid-column: 3;
+    border-top: 5px solid burlywood;
+    border-left: 5px solid burlywood;
+    border-right: 5px solid burlywood;
+    padding: 5px;
+}
+
+#parseButton {
+    grid-row: 3;
+    grid-column: 3;
+    border-top: none;
+    border-left: 5px solid burlywood;
+    border-right: 5px solid burlywood;
+    border-bottom: 5px solid burlywood;
+    padding: 5px;
+}
+
+#stringifyLabel {
+    grid-row: 4;
+    grid-column: 3;
+    border-top: 5px solid burlywood;
+    border-left: 5px solid burlywood;
+    border-right: 5px solid burlywood;
+    padding: 5px;
+}
+
+#stringifyButton {
+    grid-row: 5;
+    grid-column: 3;
+    border-top: none;
+    border-left: 5px solid burlywood;
+    border-right: 5px solid burlywood;
+    border-bottom: 5px solid burlywood;
+    padding: 5px;
+}
+
 .schedule-item {
     margin:0;
     border-radius: 0px;
+    border-width: 3px;
     resize:none;
+    border-top: none;
+    border-left: none;
+    border-bottom:5px solid burlywood;
+    border-right:5px solid burlywood;
 }
 
 
 .time-label {
     grid-column:1;
     font-size: 1.2em;
+    text-align: center;
+    border:5px solid burlywood;
 }
 .sunday {grid-column: 2;}
 .monday {grid-column: 3;}
@@ -45,6 +108,7 @@ html, body {
 .day-label {
     grid-row:1;
     font-size: 1.2em;
+    border:5px solid burlywood;
 }
 .hour1 {grid-row: 2;}
 .hour2 {grid-row: 3;}

@@ -22,9 +22,7 @@ const postableURLs = {
 };
 
 const handlePost = (request, response, parsedURL) => {
-  console.log('posting');
   if (!postableURLs[parsedURL.pathname]) {
-    console.log('failing');
     jsonHandler.notFound(request, response);
     return;
   }
@@ -39,11 +37,9 @@ const handlePost = (request, response, parsedURL) => {
 
   request.on('data', (chunk) => {
     body.push(chunk);
-    console.log('chunking');
   });
 
   request.on('end', () => {
-    console.log('posted');
     const bodyString = Buffer.concat(body).toString();
     const bodyParams = query.parse(parsedURL.query);
     postableURLs[parsedURL.pathname](request, response, bodyString, bodyParams.name);
@@ -54,7 +50,6 @@ const onRequest = (request, response) => {
   const parsedURL = url.parse(request.url);
 
   console.log(parsedURL.pathname);
-  // console.log(request.method);
 
   switch (request.method) {
     case 'GET':
